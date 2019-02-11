@@ -79,7 +79,6 @@
         border-radius: 20%;
     }
 */
-
 </style>
 
 
@@ -130,25 +129,26 @@
             function visKategorier() {
                 dest.innerHTML = "";
                 alleKategorier.forEach(kategorier => {
-                    if (filter == "alle" || filter == kategorier.hold) {
+                    if (filter == "alle" || filter == kategorier.kategori) {
                         dest.innerHTML += `
                             <div class="kategorier">
 
                             <h2>${kategorier.navn}</h2>
 
-                            <img src="imgs/small/${kategorier.billede}-sm.jpg">
-<br>
-
-                            <p>${kategorier.pris},-</p>
-                            <p>${kategorier.kort}</p>
+                            <img src="imgs/small/${kategorier.billede}-sm.jpg" alt="${kategorier.navn}">
+                                <br>
 
 
+                            <p>Kort: ${kategorier.kort}</p>
+                            <p>Oprindelse: ${kategorier.oprindelse}</p>
+                            <p>Pris: ${kategorier.pris},-</p>
 
                         </div>
                         `;
                     }
                 })
             }
+
             //function visKategorier slut
             document.querySelectorAll(".filter").forEach(elm => {
                 elm.addEventListener("click", filtrering);
@@ -161,11 +161,11 @@
                     elm.classList.remove("valgt");
                 })
                 this.classList.add("valgt");
+                console.log("filter", filter);
                 visKategorier();
             }
             getJson();
         }
-
     </script>
 </body>
 
