@@ -90,7 +90,7 @@
         .valgt {
             background-color: #96c2d0;
             color: white;
-            border: 1px solid #ffffff;
+            border: 1px solid white;
             font-weight: 900;
         }
 
@@ -98,16 +98,16 @@
             box-sizing: border-box;
             width: 100vw;
             height: 100vw;
-            background-color: white;
+            background-color: #f2fcff;
 
         }
 
         #indhold {
             box-sizing: border-box;
-            background-color: aliceblue;
+            background-color: white;
             border: 1px solid black;
             width: 90vw;
-            height: 90vw;
+            height: auto;
             margin: auto;
             padding: 50px;
 
@@ -127,7 +127,6 @@
         #indhold img {
             height: 300px;
         }
-
     </style>
 
 
@@ -136,6 +135,7 @@
 
 <body>
 
+    <!--
     <div class="babushka_overskrift">
         <h1><small>Bistro</small><br><b>BABUSHKA</b></h1>
     </div>
@@ -152,6 +152,7 @@
     </header>
     <h2>Forside</h2>
 
+-->
 
 
 
@@ -174,6 +175,7 @@
         let id = urlParams.get("id");
         let alleKategorier = [];
         let filter = "alle";
+        let kategorier;
         let kategori;
         document.addEventListener("DOMContentLoaded", start);
 
@@ -183,7 +185,7 @@
                 let jsonData = await fetch("https://mandalskeawebspace.dk/claude_php/clean_up_spreadsheet.php?id=1jxxxFoWBuMJ1qhQ9BQIAyKHmP38XtAF9_sQr0xo5JLo");
                 alleKategorier = await jsonData.json();
                 alleKategorier.forEach(obj => {
-                    if (obj.github == github) {
+                    if (obj.id == id) {
                         kategori = obj;
                     }
                 })
@@ -212,9 +214,21 @@
             document.querySelector("#tilbage button").addEventListener("click", () => {
                 location.href = "01-singleview.html"
             })
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.addEventListener("click", filtrering);
+            })
+
+            function filtrering() {
+                filter = this.getAttribute("data-hold");
+                document.querySelector("h2").textContent = this.textContent;
+                document.querySelectorAll(".filter").forEach(elm => {
+                    elm.classList.remove("valgt");
+                })
+                this.classList.add("valgt");
+                visKategorier();
+            }
             getJson();
         }
-
     </script>
 </body>
 
