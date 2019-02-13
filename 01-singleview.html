@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bistro Babushka</title>
+    <link href="https://fonts.googleapis.com/css?family=Limelight" rel="stylesheet">
 
 
 
@@ -54,13 +55,14 @@
             margin: 0;
             font-size: 40px;
             font-weight: lighter;
+            font-family: 'Limelight', cursive;
 
 
         }
 
         .babushka_overskrift {
             background-color: #ffffff;
-            padding-top: 100px;
+            padding-top: 50px;
             padding-bottom: 50px;
         }
 
@@ -73,6 +75,7 @@
             text-align: center;
             background-color: #363636;
             padding: 5px;
+            margin-bottom: 30px;
         }
 
 
@@ -96,6 +99,24 @@
             border: 1px solid #ffffff;
             font-weight: 900;
         }
+
+        .round {
+            background-color: #e7f4f8;
+            border-radius: 200px;
+            margin-left: 580px;
+            margin-right: 580px;
+            padding-top: 90px;
+            padding-bottom: 90px;
+        }
+
+        footer {
+            display: grid;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            background-color: darkgrey;
+            margin-top: 100px;
+        }
     </style>
 </head>
 
@@ -105,8 +126,11 @@
 
 <body>
 
+
     <div class="babushka_overskrift">
-        <h1><small>Bistro</small><br><b>BABUSHKA</b></h1>
+        <div class="round">
+            <h1><small>Bistro</small><br><b>BABUSHKA</b></h1>
+        </div>
     </div>
     <header>
         <nav class="menu">
@@ -124,15 +148,26 @@
 
     <section id=liste></section>
 
+    <footer>
+        <div>Adresse: Solvænget 97 <br> 1234 Køkbenhavn Ø </div>
+        <br>
+        <div>Åbningstider: Mandag-fredag 10:00-22:00 <br> Lørdag 12:00-23:00 </div>
+    </footer>
+
+
 
 
 
     <script>
+        //VARIABLER
         let alleKategorier = [];
         let filter = "alle";
         let kategorier;
         let kategori;
+
+        //VINDUET INDLÆSES
         document.addEventListener("DOMContentLoaded", start);
+
 
         function start() {
             let dest = document.querySelector("#liste");
@@ -144,7 +179,7 @@
                 //                })
                 alleKategorier.sort((a, b) => {
                     return a.navn.localeCompare(b.navn);
-                })
+                });
 
                 visKategorier();
             }
@@ -154,20 +189,14 @@
                 alleKategorier.forEach(kategorier => {
                     if (filter == "alle" || filter == kategorier.kategori) {
                         let template = `
-                            <article class="kategorier">
-
+                        <article class="kategorier">
                             <h2>${kategorier.navn}</h2>
-
                             <img src="imgs/small/${kategorier.billede}-sm.jpg" alt="${kategorier.navn}">
                                 <br>
-
-
                             <p>Om: ${kategorier.kort}</p><br>
-
                             <p>Oprindelse: ${kategorier.oprindelse}</p>
-<br>
+                                <br>
                             <p>Pris: ${kategorier.pris},-</p>
-
                         </article>
                         `;
                         dest.insertAdjacentHTML("beforeend", template);
@@ -175,7 +204,7 @@
                             location.href = "02-singleview.html?id=" + kategorier.id;
                         });
                     }
-                })
+                });
             }
 
             //function visKategorier slut

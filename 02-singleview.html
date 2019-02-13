@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bistro Babushka</title>
+    <link href="https://fonts.googleapis.com/css?family=Limelight" rel="stylesheet">
 
 
 
@@ -195,38 +196,32 @@
 
             function åben() {
                 document.querySelector("#indhold").innerHTML = `
-            <article class="kategorier">
-
+                        <article class="kategorier">
                             <h2>${kategorier.navn}</h2>
-
                             <img src="imgs/small/${kategorier.billede}-sm.jpg" alt="${kategorier.navn}">
                                 <br>
-
-
                             <p>Om: ${kategorier.kort}</p><br>
-
                             <p>Oprindelse: ${kategorier.oprindelse}</p>
-<br>
+                                <br>
                             <p>Pris: ${kategorier.pris},-</p>
-
-                        </article>`
+                        </article>`;
             }
             document.querySelector("#tilbage button").addEventListener("click", () => {
                 location.href = "01-singleview.html"
             })
-            document.querySelectorAll(".filter").forEach(elm => {
-                elm.addEventListener("click", filtrering);
-            })
-
-            function filtrering() {
-                filter = this.getAttribute("data-hold");
-                document.querySelector("h2").textContent = this.textContent;
-                document.querySelectorAll(".filter").forEach(elm => {
-                    elm.classList.remove("valgt");
-                })
-                this.classList.add("valgt");
-                visKategorier();
-            }
+            //            document.querySelectorAll(".filter").forEach(elm => {
+            //                elm.addEventListener("click", filtrering);
+            //            })
+            //
+            //            function filtrering() {
+            //                filter = this.getAttribute("data-hold");
+            //                document.querySelector("h2").textContent = this.textContent;
+            //                document.querySelectorAll(".filter").forEach(elm => {
+            //                    elm.classList.remove("valgt");
+            //                })
+            //                this.classList.add("valgt");
+            //                visKategorier();
+            //            }
             getJson();
         }
     </script>
