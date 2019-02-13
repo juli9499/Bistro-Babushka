@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bistro Babushka</title>
+
+
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f2fcff;
+            font-family: arial;
+            margin: 0;
+        }
+
+        .kategorier {
+            border: 1px solid #000000;
+            margin: 10px;
+            padding: 10px;
+            color: #000000;
+            background-color: white;
+        }
+
+        #liste {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            margin-left: 200px;
+            margin-right: 200px;
+        }
+
+        .kategorier img {
+            display: block;
+            max-width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .kategorier2 img {
+            display: block;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h2 {
+            color: #5381aa;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0;
+            font-size: 40px;
+            font-weight: lighter;
+
+
+        }
+
+        .babushka_overskrift {
+            background-color: #ffffff;
+            padding-top: 100px;
+            padding-bottom: 50px;
+        }
+
+        p {
+            font-size: 17px;
+        }
+
+
+        .menu {
+            text-align: center;
+            background-color: #363636;
+            padding: 5px;
+        }
+
+
+
+        button {
+            background-color: #363636;
+            border: 1px solid #969696;
+            color: white;
+            margin: 5px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .valgt {
+            background-color: #96c2d0;
+            color: white;
+            border: 1px solid #ffffff;
+            font-weight: 900;
+        }
+
+        #popup {
+            display: none;
+            border: 1px solid black;
+            width: 500px;
+            height: auto;
+            padding-bottom: 30px;
+            top: 100px;
+            left: 470px;
+            position: fixed;
+            background-color: white;
+        }
+
+        #indhold {
+            box-sizing: border-box;
+            background-color: white;
+            width: 400px;
+            /*        padding: 10px;*/
+            height: auto;
+            margin: auto;
+            padding:
+        }
+
+        #luk {
+            box-sizing: border-box;
+            text-align: right;
+            padding-right: 1em;
+        }
+
+        #luk button {
+            font-size: 2em;
+        }
+
+    </style>
+
+
+</head>
+
+<!--popup-->
+
+
+
+<body>
+    <div id="popup">
+        <div id="luk"><button>X</button></div>
+        <div id="indhold"></div>
+    </div>
+
+    <div class="babushka_overskrift">
+        <h1><small>Bistro</small><br><b>BABUSHKA</b></h1>
+    </div>
+    <header>
+        <nav class="menu">
+            <button class="filter valgt" data-hold="alle">Forside</button>
+            <button class="filter" data-hold="forretter">Forret</button>
+            <button class="filter" data-hold="hovedretter">Hovedret</button>
+            <button class="filter" data-hold="desserter">Dessert</button>
+            <button class="filter" data-hold="sideorders">Sideorder</button>
+            <button class="filter" data-hold="drikkevarer">Drikkevarer</button>
+        </nav>
+
+    </header>
+    <h2>Forside</h2>
+
+
+    <section id=liste></section>
+
+
+
+
+    <script>
+        let alleKategorier = [];
+        let filter = "alle";
+        document.addEventListener("DOMContentLoaded", start);
+
+        function start() {
+            let dest = document.querySelector("#liste");
+            async function getJson() {
+                let jsonData = await fetch("https://mandalskeawebspace.dk/claude_php/clean_up_spreadsheet.php?id=1jxxxFoWBuMJ1qhQ9BQIAyKHmP38XtAF9_sQr0xo5JLo");
+                alleKategorier = await jsonData.json();
+                //                alleKategorierr.sort((a, b) => {
+                //                    return a.alder - b.alder
+                //                })
+                alleKategorier.sort((a, b) => {
+                    return a.navn.localeCompare(b.navn);
+                })
+
+                visKategorier();
+            }
+
+            function visKategorier() {
+                dest.innerHTML = "";
+                alleKategorier.forEach(kategorier => {
+                    if (filter == "alle" || filter == kategorier.kategori) {
+                        let template = `
+                            <article class="kategorier">
+
+                            <h2>${kategorier.navn}</h2>
+
+                            <img src="imgs/small/${kategorier.billede}-sm.jpg" alt="${kategorier.navn}">
+                                <br>
+
+
+                            <p>Om: ${kategorier.kort}</p><br>
+
+                            <p>Oprindelse: ${kategorier.oprindelse}</p>
+<br>
+                            <p>Pris: ${kategorier.pris},-</p>
+
+                        </article>
+                        `;
+                        dest.insertAdjacentHTML("beforeend", template);
+                        dest.lastElementChild.addEventListener("click", åbn);
+
+                        function åbn() {
+                            document.querySelector("#indhold").innerHTML = `
+                            <article class="kategorier2">
+
+                            <h2>${kategorier.navn}</h2>
+
+                            <img src="imgs/large/${kategorier.billede}.jpg" alt="${kategorier.navn}">
+                                <br>
+
+
+                            <p>Om: ${kategorier.lang}</p>
+<br>
+                            <p>Oprindelse: ${kategorier.oprindelse}</p>
+<br>
+                            <p>Pris: ${kategorier.pris},-</p>
+
+                        </article>
+                        `;
+                            document.querySelector("#popup").style.display = "block";
+                        }
+                    }
+                })
+            }
+
+            //function visKategorier slut
+
+            //            document.querySelectorAll(".filter").forEach(elm => {
+            //                elm.addEventListener("click", filtrering);
+            //
+            //            })
+            document.querySelector("#luk button").addEventListener("click", () => {
+                document.querySelector("#popup").style.display = "none";
+            })
+
+            function filtrering() {
+                filter = this.getAttribute("data-hold");
+                document.querySelector("h2").textContent = this.textContent;
+                document.querySelectorAll(".filter").forEach(elm => {
+                    elm.classList.remove("valgt");
+                })
+                this.classList.add("valgt");
+                console.log("filter", filter);
+                visKategorier();
+            }
+            getJson();
+        }
+
+    </script>
+</body>
+
+</html>

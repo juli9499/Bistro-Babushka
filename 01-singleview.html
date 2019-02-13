@@ -5,88 +5,110 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bistro Babushka</title>
-    <link rel="stylesheet" href="">
+
+
+
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f2fcff;
+            font-family: arial;
+            margin: 0;
+        }
+
+        .kategorier {
+            border: 1px solid #000000;
+            margin: 10px;
+            padding: 10px;
+            color: #000000;
+            background-color: white;
+        }
+
+        #liste {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            margin-left: 200px;
+            margin-right: 200px;
+        }
+
+        img {
+            display: block;
+            max-width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h2 {
+            color: #5381aa;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0;
+            font-size: 40px;
+            font-weight: lighter;
+
+
+        }
+
+        .babushka_overskrift {
+            background-color: #ffffff;
+            padding-top: 100px;
+            padding-bottom: 50px;
+        }
+
+        p {
+            font-size: 17px;
+        }
+
+
+        .menu {
+            text-align: center;
+            background-color: #363636;
+            padding: 5px;
+        }
+
+
+        button {
+            background-color: #363636;
+            border: 1px solid #969696;
+            color: white;
+            margin: 5px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .valgt {
+            background-color: #96c2d0;
+            color: white;
+            border: 1px solid #ffffff;
+            font-weight: 900;
+        }
+
+    </style>
 </head>
 
-<style>
-    body {
-        background-color: #ffedf9;
-        font-family: arial;
-    }
 
-    .kategorier {
-        border: 1px solid #000000;
-        margin: 10px;
-        padding: 10px;
-        color: #000000;
-        background-color: white;
-    }
-
-    #liste {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-    }
-
-    img {
-        display: block;
-        max-width: 150px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    h2 {
-        color: #5381aa;
-        text-align: center;
-    }
-
-    h1 {
-        text-align: center;
-    }
-
-    p {
-        font-size: 17px;
-    }
-
-
-    .menu {
-        text-align: center;
-        background-color: black;
-
-    }
-
-    button {
-        background-color: white;
-        border: 1px solid black;
-        margin: 5px;
-        padding-left: 15px;
-        padding-right: 15px;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 15px;
-    }
-
-    .valgt {
-        background-color: #dea8cd;
-        color: white;
-        border: 1px solid black;
-        font-weight: 900;
-    }
-
-    /*
-    .holdB {
-        background-color: #ea7ccc;
-        color: white;
-        border-radius: 20%;
-    }
-*/
-</style>
 
 
 
 <body>
 
-
-    <h1>Bistro Babushka</h1>
+    <div class="babushka_overskrift">
+        <h1><small>Bistro</small><br><b>BABUSHKA</b></h1>
+    </div>
     <header>
         <nav class="menu">
             <button class="filter valgt" data-hold="alle">Forside</button>
@@ -130,8 +152,8 @@
                 dest.innerHTML = "";
                 alleKategorier.forEach(kategorier => {
                     if (filter == "alle" || filter == kategorier.kategori) {
-                        dest.innerHTML += `
-                            <div class="kategorier">
+                        let template = `
+                            <article class="kategorier">
 
                             <h2>${kategorier.navn}</h2>
 
@@ -139,12 +161,18 @@
                                 <br>
 
 
-                            <p>Kort: ${kategorier.kort}</p>
+                            <p>Om: ${kategorier.kort}</p><br>
+
                             <p>Oprindelse: ${kategorier.oprindelse}</p>
+<br>
                             <p>Pris: ${kategorier.pris},-</p>
 
-                        </div>
+                        </article>
                         `;
+                        dest.insertAdjacentHTML("beforeend", template);
+                        dest.lastElementChild.addEventListener("click", () => {
+                            location.href = "02-singleview.html?id=" + kategorier.id;
+                        });
                     }
                 })
             }
@@ -161,11 +189,11 @@
                     elm.classList.remove("valgt");
                 })
                 this.classList.add("valgt");
-                console.log("filter", filter);
                 visKategorier();
             }
             getJson();
         }
+
     </script>
 </body>
 

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bistro Babushka</title>
+
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f2fcff;
+            font-family: arial;
+            margin: 0;
+        }
+
+        .kategorier {
+            border: 1px solid #000000;
+            margin: 10px;
+            padding: 10px;
+            color: #000000;
+            background-color: white;
+        }
+
+        #liste {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            margin-left: 200px;
+            margin-right: 200px;
+        }
+
+        img {
+            display: block;
+            max-width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h2 {
+            color: #5381aa;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0;
+            font-size: 40px;
+            font-weight: lighter;
+
+        }
+
+        .babushka_overskrift {
+            background-color: #ffffff;
+            padding-top: 100px;
+            padding-bottom: 50px;
+        }
+
+        p {
+            font-size: 17px;
+        }
+
+
+        .menu {
+            text-align: center;
+            background-color: #363636;
+            padding: 5px;
+        }
+
+
+        button {
+            background-color: #363636;
+            border: 1px solid #969696;
+            color: white;
+            margin: 5px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .valgt {
+            background-color: #96c2d0;
+            color: white;
+            border: 1px solid #ffffff;
+            font-weight: 900;
+        }
+
+        #singleview {
+            box-sizing: border-box;
+            width: 100vw;
+            height: 100vw;
+            background-color: white;
+
+        }
+
+        #indhold {
+            box-sizing: border-box;
+            background-color: aliceblue;
+            border: 1px solid black;
+            width: 90vw;
+            height: 90vw;
+            margin: auto;
+            padding: 50px;
+
+            top: 0;
+        }
+
+        #tilbage {
+            box-sizing: border-box;
+            text-align: right;
+            padding-right: 1em;
+        }
+
+        #tilbage button {
+            font-size: 2em;
+        }
+
+        #indhold img {
+            height: 300px;
+        }
+
+    </style>
+
+
+
+</head>
+
+<body>
+
+    <div class="babushka_overskrift">
+        <h1><small>Bistro</small><br><b>BABUSHKA</b></h1>
+    </div>
+    <header>
+        <nav class="menu">
+            <button class="filter valgt" data-hold="alle">Forside</button>
+            <button class="filter" data-hold="forretter">Forret</button>
+            <button class="filter" data-hold="hovedretter">Hovedret</button>
+            <button class="filter" data-hold="desserter">Dessert</button>
+            <button class="filter" data-hold="sideorders">Sideorder</button>
+            <button class="filter" data-hold="drikkevarer">Drikkevarer</button>
+        </nav>
+
+    </header>
+    <h2>Forside</h2>
+
+
+
+
+    <section id=liste></section>
+
+    <section>
+        <div id="singleview">
+            <div id="tilbage"><button>⇦</button> </div>
+            <div id="indhold">
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <script>
+        let urlParams = new URLSearchParams(window.location.search);
+        let id = urlParams.get("id");
+        let alleKategorier = [];
+        let filter = "alle";
+        let kategori;
+        document.addEventListener("DOMContentLoaded", start);
+
+        function start() {
+            //            let dest = document.querySelector("#liste");
+            async function getJson() {
+                let jsonData = await fetch("https://mandalskeawebspace.dk/claude_php/clean_up_spreadsheet.php?id=1jxxxFoWBuMJ1qhQ9BQIAyKHmP38XtAF9_sQr0xo5JLo");
+                alleKategorier = await jsonData.json();
+                alleKategorier.forEach(obj => {
+                    if (obj.github == github) {
+                        kategori = obj;
+                    }
+                })
+
+                åben();
+            }
+
+            function åben() {
+                document.querySelector("#indhold").innerHTML = `
+            <article class="kategorier">
+
+                            <h2>${kategorier.navn}</h2>
+
+                            <img src="imgs/small/${kategorier.billede}-sm.jpg" alt="${kategorier.navn}">
+                                <br>
+
+
+                            <p>Om: ${kategorier.kort}</p><br>
+
+                            <p>Oprindelse: ${kategorier.oprindelse}</p>
+<br>
+                            <p>Pris: ${kategorier.pris},-</p>
+
+                        </article>`
+            }
+            document.querySelector("#tilbage button").addEventListener("click", () => {
+                location.href = "01-singleview.html"
+            })
+            getJson();
+        }
+
+    </script>
+</body>
+
+</html>
