@@ -43,7 +43,7 @@
             margin-right: auto;
         }
 
-        .kategorier2 img {
+        .popup img {
             display: block;
             max-width: 400px;
             margin-left: auto;
@@ -135,7 +135,6 @@
         #luk button {
             font-size: 2em;
         }
-
     </style>
 
 
@@ -180,12 +179,12 @@
 
         function start() {
             let dest = document.querySelector("#liste");
+            let temp = document.querySelector("template");
             async function getJson() {
                 let jsonData = await fetch("https://mandalskeawebspace.dk/claude_php/clean_up_spreadsheet.php?id=1jxxxFoWBuMJ1qhQ9BQIAyKHmP38XtAF9_sQr0xo5JLo");
                 alleKategorier = await jsonData.json();
-                //                alleKategorierr.sort((a, b) => {
-                //                    return a.alder - b.alder
-                //                })
+
+                //sorteree efter navn
                 alleKategorier.sort((a, b) => {
                     return a.navn.localeCompare(b.navn);
                 })
@@ -199,40 +198,29 @@
                     if (filter == "alle" || filter == kategorier.kategori) {
                         let template = `
                             <article class="kategorier">
-
                             <h2>${kategorier.navn}</h2>
-
                             <img src="imgs/small/${kategorier.billede}-sm.jpg" alt="${kategorier.navn}">
                                 <br>
-
-
                             <p>Om: ${kategorier.kort}</p><br>
-
                             <p>Oprindelse: ${kategorier.oprindelse}</p>
-<br>
+                                <br>
                             <p>Pris: ${kategorier.pris},-</p>
-
                         </article>
                         `;
                         dest.insertAdjacentHTML("beforeend", template);
-                        dest.lastElementChild.addEventListener("click", åbn);
+                        dest.lastElementChild.addEventListener("click", åben);
 
-                        function åbn() {
+                        function åben() {
                             document.querySelector("#indhold").innerHTML = `
-                            <article class="kategorier2">
-
+                            <article class="popup">
                             <h2>${kategorier.navn}</h2>
-
                             <img src="imgs/large/${kategorier.billede}.jpg" alt="${kategorier.navn}">
                                 <br>
-
-
                             <p>Om: ${kategorier.lang}</p>
-<br>
+                                <br>
                             <p>Oprindelse: ${kategorier.oprindelse}</p>
-<br>
+                                <br>
                             <p>Pris: ${kategorier.pris},-</p>
-
                         </article>
                         `;
                             document.querySelector("#popup").style.display = "block";
@@ -250,6 +238,10 @@
             document.querySelector("#luk button").addEventListener("click", () => {
                 document.querySelector("#popup").style.display = "none";
             })
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.addEventListener("click", filtrering);
+            })
+
 
             function filtrering() {
                 filter = this.getAttribute("data-hold");
@@ -263,7 +255,6 @@
             }
             getJson();
         }
-
     </script>
 </body>
 

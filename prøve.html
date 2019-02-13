@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="DA">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bistro Babushka</title>
+</head>
+
+<style>
+    /*    styling for hele sitet */
+    #liste {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        border: 80px solid #293b29;
+        margin: auto;
+    }
+
+    .kategorier img {
+        max-width: 150px;
+        margin-left: 50px;
+    }
+
+    .kategorier {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        border: 3px solid #2e8431;
+        margin: 6px;
+        padding: 5px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #2d552d;
+    }
+
+    p {
+        margin-left: 50px;
+        color: rgb(142, 116, 27);
+    }
+
+    .valgt {
+        border-radius: 4px;
+        background-color: rgba(175, 159, 105, 0.92);
+    }
+
+    h1 {
+        text-align: center;
+        font-family: cursive;
+        font-size: 50px;
+    }
+
+    /*
+    menu linje/bar
+*/
+    .menu {
+        text-align: center;
+        background-color: rgb(219, 172, 13);
+        font-size: 15px;
+    }
+
+    .filter {
+        font-size: 15px;
+        border-radius: 4px;
+        font-family: helvetica;
+        margin: 10px;
+    }
+
+    /*
+popup styling
+*/
+    #indhold {
+        box-sizing: border-box;
+        background-color: rgb(240, 229, 190);
+        width: 59vw;
+        height: 62vh;
+        margin: auto;
+        margin-top: 0px;
+        align-content: center;
+    }
+
+    #popup {
+        width: 60vw;
+        height: 72vh;
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.54);
+        display: none;
+        margin-left: 280px;
+        text-align: center;
+    }
+
+    #popup img {
+        max-width: 300px;
+    }
+
+    #popup p {
+        font-size: 13px;
+    }
+
+    /*
+knap til popup
+*/
+    #luk {
+        box-sizing: border-box;
+        text-align: right;
+        padding-right: 1em;
+    }
+
+    #luk button {
+        margin-top: 10px;
+        font-size: 1.5em;
+        border-radius: 4px;
+    }
+</style>
+
+<body>
+    <header>
+        <h1>Bistro Babushka</h1>
+        <nav>
+            <div class="menu">
+                <button class="filter" data-hold="alle">Alle kategorier</button>
+                <button class="filter" data-hold="forretter">Forret</button>
+                <button class="filter" data-hold="hovedretter">Hovedret</button>
+                <button class="filter" data-hold="desserter">Dessert</button>
+                <button class="filter" data-hold="sideorders">Sideorders</button>
+                <button class="filter" data-hold="drikkevarer">Drikkevarer</button>
+            </div>
+        </nav>
+    </header>
+
+    <section>
+        <div id="popup">
+            <div id="luk"><button>X</button></div>
+            <div id="indhold"></div>
+        </div>
+    </section>
+
+    <section>
+        <div id="liste"></div>
+    </section>
+    <script>
+        let kategoriListe = [];
+        let filter = "alle";
+        document.addEventListener("DOMContentLoaded", start);
+
+        function start() {
+            let dest = document.querySelector("#liste");
+            let temp = document.querySelector("template");
+            async function getJson() {
+                let jsonData = await fetch("https://mandalskeawebspace.dk/claude_php/clean_up_spreadsheet.php?id=1jxxxFoWBuMJ1qhQ9BQIAyKHmP38XtAF9_sQr0xo5JLo");
+                kategoriListe = await jsonData.json();
+                //sortere efter navn
+                kategoriListe.sort((a, b) => {
+                    return a.navn.localeCompare(b.navn);
+                })
+                visKategori();
+            }
+
+            function visKategori() {
+                dest.innerHTML = "";
+                kategoriListe.forEach(kategorier => {
+                    if (filter == "alle" || filter == kategorier.kategori) {
+                        let template = `
+                                <div class="kategorier">
+                                    <h2>${kategorier.navn}</h2>
+                                    <img src="imgs/small/${kategorier.billede}-sm.jpg" alt="${kategorier.navn}">
+                                    <p>Kategori: ${kategorier.kategori}</p>
+                                    <p>Pris: ${kategorier.pris} kr.</p>
+                                    <p>${kategorier.kort}</p>
+                                </div>
+                            `;
+                        dest.insertAdjacentHTML("beforeend", template);
+                        dest.lastElementChild.addEventListener("click", åben);
+
+                        function åben() {
+                            document.querySelector("#indhold").innerHTML = `
+                                <div class="popup">
+                                    <h2>${kategorier.navn}</h2>
+                                        <img src="imgs/large/${kategorier.billede}.jpg" alt="${kategorier.navn}">
+                                        <p>Kategori: ${kategorier.kategori}</p>
+                                        <p>Pris: ${kategorier.pris} kr.</p>
+                                        <p>Kort: ${kategorier.kort}</p>
+                                        <p>Lang: ${kategorier.lang}</p>
+                                        <p>Oprindelse: ${kategorier.oprindelse}</p>
+                                 </div>
+                                        `;
+                            document.querySelector("#popup").style.display = "block";
+                        }
+                    }
+                });
+            }
+            document.querySelector("#luk button").addEventListener("click", () => {
+                document.querySelector("#popup").style.display = "none";
+            })
+            document.querySelectorAll(".filter").forEach(elm => {
+                elm.addEventListener("click", filtrering);
+            })
+
+            function filtrering() {
+                filter = this.getAttribute("data-hold");
+                document.querySelector("h1").textContent = this.textContent;
+                document.querySelectorAll(".filter").forEach(elm => {
+                    elm.classList.remove("valgt");
+                })
+                this.classList.add("valgt");
+                console.log("Viser", filter)
+                visKategori();
+            }
+            getJson();
+        }
+    </script>
+</body>
+</html>
