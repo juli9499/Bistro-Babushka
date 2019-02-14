@@ -38,7 +38,7 @@
 
         img {
             display: block;
-            max-width: 150px;
+            max-width: 400px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -125,9 +125,11 @@
             font-size: 2em;
         }
 
+        /*
         #indhold img {
             height: 300px;
         }
+*/
     </style>
 
 
@@ -176,7 +178,6 @@
         let id = urlParams.get("id");
         let alleKategorier = [];
         let filter = "alle";
-        let kategorier;
         let kategori;
         document.addEventListener("DOMContentLoaded", start);
 
@@ -197,17 +198,17 @@
             function åben() {
                 document.querySelector("#indhold").innerHTML = `
                         <article class="kategorier">
-                            <h2>${kategorier.navn}</h2>
-                            <img src="imgs/small/${kategorier.billede}-sm.jpg" alt="${kategorier.navn}">
+                            <h2>${kategori.navn}</h2>
+                            <img src="imgs/small/${kategori.billede}-sm.jpg" alt="${kategori.navn}">
                                 <br>
-                            <p>Om: ${kategorier.kort}</p><br>
-                            <p>Oprindelse: ${kategorier.oprindelse}</p>
+                            <p>Om: ${kategori.lang}</p><br>
+                            <p>Oprindelse: ${kategori.oprindelse}</p>
                                 <br>
-                            <p>Pris: ${kategorier.pris},-</p>
+                            <b>Pris: ${kategori.pris},-</b>
                         </article>`;
             }
             document.querySelector("#tilbage button").addEventListener("click", () => {
-                location.href = "01-singleview.html"
+                location.href = "01-loopView.html"
             })
             //            document.querySelectorAll(".filter").forEach(elm => {
             //                elm.addEventListener("click", filtrering);
